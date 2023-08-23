@@ -11,9 +11,10 @@
     >>> grids = pdf.get_member_grids(0)
 
 """
-from pathlib import Path
 from dataclasses import dataclass
 from fnmatch import fnmatch
+from pathlib import Path
+
 import numpy as np
 import yaml
 

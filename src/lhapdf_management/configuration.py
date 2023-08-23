@@ -4,11 +4,10 @@
     It exposes an object (environment) that should contain
     all relevant external information
 """
+import logging
 import os
 import sys
 from pathlib import Path
-import logging
-
 
 logger = logging.getLogger(__name__)
 
