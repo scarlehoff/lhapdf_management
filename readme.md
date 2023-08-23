@@ -24,6 +24,15 @@ Updates the local reference index
   lhapdf_management update
 ```
 
+If no installation of LHAPDF is found, the program will fail to do anything, as creating the `LHAPDF` directory is not the business of the management module.
+In order to run lhapdf-management and make it believe that LHAPDF already exist a possibility is to populate the `LHAPDF_DATA_PATH` environment variable, i.e.,
+
+```bash
+LHAPDF_DATA_PATH=$(python -c 'from pathlib import Path ; from sys import prefix ; print(Path(prefix) / "share" / "LHAPDF")' ; lhapdf-management update
+```
+
+It is possible to create the directory in the "best guess location" doing `lhapdf_management update --init`
+
 ## List
 
 Lists all available PDFs
@@ -87,15 +96,5 @@ The list of features that are currently missing with respect to the previous scr
 
 - list ``--outdated``
 - install ``--dryrun``
-
-For the time being, if no installation of LHAPDF is found, the program will fail to do anything, as creating the `LHAPDF` directory is not the business of the management module.
-In order to run lhapdf-management and make it believe that LHAPDF already exist a possibility is to populate the `LHAPDF_DATA_PATH` environment variable, i.e.,
-
-```bash
-LHAPDF_DATA_PATH=$(python -c 'from pathlib import Path ; from sys import prefix ; print(Path(prefix) / "share" / "LHAPDF")' ; lhapdf-management update
-```
-
-In future versions this script will also provide an option to create the directory
-
 
 [License](https://gitlab.com/hepcedar/lhapdf/-/blob/master/COPYING)
