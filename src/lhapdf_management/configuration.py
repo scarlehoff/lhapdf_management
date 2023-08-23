@@ -51,6 +51,15 @@ class _Environment:
             self._datapath = _get_lhapdf_datapath()
         return self._datapath
 
+    @property
+    def possible_datapath(self):
+        """Like datapath, but if the datapath doesn't exist
+        returns the best-guess path instead"""
+        try:
+            return self.datapath
+        except FileNotFoundError:
+            return _get_lhapdf_datapath(best_guess=True)
+
     @datapath.setter
     def datapath(self, new_datapath):
         """Set the LHAPDF datapath"""
@@ -82,7 +91,7 @@ class _Environment:
         self._root_logger.setLevel(logging.DEBUG)
 
 
-def _get_lhapdf_datapath():
+def _get_lhapdf_datapath(best_guess=False):
     """Look for the LHAPDF data folder
     The look-for order is:
     LHAPDF_DATA_PATH, LHAPATH, current prefix
@@ -92,10 +101,11 @@ def _get_lhapdf_datapath():
         val = os.environ.get(i)
         if val is not None:
             return Path(val)
+
     # If we didn't find it in the environment variables, autodiscover prefix
     prefix_paths = [sys.prefix, sys.base_prefix]
     for prefix_path in prefix_paths:
-        lhapdf_path = Path(prefix_path) / "share/LHAPDF/"
+        lhapdf_path = Path(prefix_path) / "share" / "LHAPDF"
         if lhapdf_path.is_dir():
             # Some sytems (such as Arch) keep things under LHAPDF/lhapdf so, check that as well
             if (lhapdf_path / "lhapdf").is_dir():
@@ -107,6 +117,9 @@ def _get_lhapdf_datapath():
 
         return Path(lhapdf.paths()[0])
     except ImportError as e:
+        if best_guess:
+            # TODO: check we can actually write to this path!
+            return Path(sys.prefix) / "share" / "LHAPDF"
         logger.error(
             "Data directory for LHAPDF not found, you can use the LHAPDF_DATA_PATH environ variable"
         )

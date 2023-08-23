@@ -27,6 +27,7 @@ def setVerbosity(verbosity_level):
     )
     return None
 
+
 def paths():
     """Returns the first active LHAPDF path"""
     return [environment.datapath]
