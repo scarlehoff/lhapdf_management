@@ -2,13 +2,13 @@
 """
     Main LHAPDF management script
 """
+import argparse
 import logging
 import sys
 from pathlib import Path
-import argparse
 
-from lhapdf_management.configuration import environment
 from lhapdf_management import management
+from lhapdf_management.configuration import environment
 
 logger = logging.getLogger(__name__)
 
@@ -144,7 +144,17 @@ Error type: {pdf.error_type}"""
 
     def update(self, *extra_args):
         """Download and install a new PDF set index file"""
-        _ = self._parser.parse_args(extra_args)
+        update_args = self._parser.add_argument_group("update arguments")
+        datapath = environment.possible_datapath
+        update_args.add_argument(
+            "--init",
+            help=f"Initialize the if it doesn't exit (currently: {datapath})",
+            action="store_true",
+        )
+        args = self._parser.parse_args(extra_args)
+        if args.init:
+            logger.warning("Creating the path")
+            datapath.mkdir(exist_ok=True, parents=True)
         return management.update_reference_file()
 
     def install(self, *extra_args):
