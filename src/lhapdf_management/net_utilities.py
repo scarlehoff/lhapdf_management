@@ -1,13 +1,13 @@
 """
     Network utilities of LHAPDF
 """
-from pathlib import Path
-import urllib.parse
-import urllib.request
 import logging
 import math
 import shutil
 import tempfile
+import urllib.parse
+import urllib.request
+from pathlib import Path
 
 try:
     from tqdm import tqdm
@@ -29,7 +29,7 @@ def _byte_print(byte_size):
     """Return size as a nicely-formatted string"""
     units = ("B", "KB", "MB", "GB")
     order = int(math.log(byte_size, 1024))
-    value = byte_size / 1024 ** order
+    value = byte_size / 1024**order
     if value > 0:
         return f"{value:.2f} {units[order]}"
     return "0 B"
@@ -72,7 +72,9 @@ def _download_url(source_url, dest_path):
     It first downloads to some temporary folder"""
     tmp_dest = tempfile.mktemp()
     if _enable_fancy_progress:
-        with _ProgressBar(unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=dest_path.name) as pbar:
+        with _ProgressBar(
+            unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=dest_path.name
+        ) as pbar:
             urllib.request.urlretrieve(source_url, tmp_dest, pbar.progress_update)
     else:
         urllib.request.urlretrieve(source_url, tmp_dest)

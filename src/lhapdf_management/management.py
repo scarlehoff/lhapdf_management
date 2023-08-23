@@ -2,17 +2,18 @@
     LHAPDF management library
 """
 import csv
-import tempfile
-import tarfile
-from pathlib import Path
 import logging
+import tarfile
+import tempfile
+from pathlib import Path
 
 from .configuration import environment
-from .pdfsets import SetInfo
 from .net_utilities import download_magic
+from .pdfsets import SetInfo
 
 # Set up the logger
 logger = logging.getLogger(__name__)
+
 
 ### Listing utilities
 def get_reference_list(filepath=None):
