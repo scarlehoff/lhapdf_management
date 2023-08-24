@@ -3,10 +3,12 @@
 """
 import os
 import subprocess as sp
-from tempfile import mkdtemp
-from pathlib import Path
 from filecmp import dircmp
+from pathlib import Path
+from tempfile import mkdtemp
+
 import pytest
+
 from test_show import patterns as pdfsets
 
 ENV_VAR = "LHAPDF_DATA_PATH"

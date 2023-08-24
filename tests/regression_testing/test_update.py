@@ -3,8 +3,8 @@
 """
 import os
 import subprocess as sp
-from tempfile import mkdtemp
 from pathlib import Path
+from tempfile import mkdtemp
 
 
 def test_update():

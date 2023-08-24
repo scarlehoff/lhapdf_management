@@ -6,14 +6,12 @@
     3) Open them all
 """
 
+import sys
+import tempfile
 from argparse import ArgumentParser
 from pathlib import Path
-import tempfile
-import sys
 
-from lhapdf_management import environment, pdf_install, pdf_update, pdf_list
-from lhapdf_management.pdfsets import PDF
-
+from lhapdf_management import environment, pdf_list, pdf_update
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
@@ -29,8 +27,10 @@ if __name__ == "__main__":
         target_dir = args.dir
 
     if not args.yes:
-        print(f"""You are about to download every set available to this script to {target_dir.absolute()}
-This is likely to be heavy in both your storage and your bandwith.""")
+        print(
+            f"""You are about to download every set available to this script to {target_dir.absolute()}
+This is likely to be heavy in both your storage and your bandwith."""
+        )
         yn = input(" > Do you want to continue? [Y/N] ")
         if not yn.lower() in ("y", "yes", "ye", "si"):
             sys.exit(0)
@@ -52,7 +52,6 @@ This is likely to be heavy in both your storage and your bandwith.""")
         if args.verbose:
             print(f"Testing {pdf}... ", end="")
         try:
-            #pdf_install(pdf.name)
             pdf.install()
             # Try loading the PDF
             loaded_pdf = pdf.load()
