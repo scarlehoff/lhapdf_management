@@ -3,7 +3,6 @@
 """
 
 import pytest
-
 from test_show import compare
 from test_show import patterns as extra_patterns
 

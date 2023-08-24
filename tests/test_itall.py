@@ -6,10 +6,10 @@
     3) Open them all
 """
 
-import sys
-import tempfile
 from argparse import ArgumentParser
 from pathlib import Path
+import sys
+import tempfile
 
 from lhapdf_management import environment, pdf_list, pdf_update
 

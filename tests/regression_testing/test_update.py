@@ -2,8 +2,8 @@
     Test the update command and compare with LHAPDF
 """
 import os
-import subprocess as sp
 from pathlib import Path
+import subprocess as sp
 from tempfile import mkdtemp
 
 

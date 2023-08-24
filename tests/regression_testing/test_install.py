@@ -1,14 +1,13 @@
 """
     Test the update command and compare with LHAPDF
 """
-import os
-import subprocess as sp
 from filecmp import dircmp
+import os
 from pathlib import Path
+import subprocess as sp
 from tempfile import mkdtemp
 
 import pytest
-
 from test_show import patterns as pdfsets
 
 ENV_VAR = "LHAPDF_DATA_PATH"

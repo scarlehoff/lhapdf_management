@@ -1,16 +1,22 @@
 name: Check all PDFs
 
-on: [push]
+on:
+  pull_request:
+    types: [labeled]
 
 jobs:
   pdftest:
+    if: contains(github.event.pull_request.labels.*.name, 'test_all_pdfs')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' 
       - name: Install lhapdf-management
         shell: bash -l {0}
         run: |
-          python -m pip install .
+          pip install .
           lhapdf-management update --init
       - name: Test alll
         shell: bash -l {0}

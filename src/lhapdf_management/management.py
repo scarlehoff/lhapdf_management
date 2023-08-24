@@ -3,9 +3,9 @@
 """
 import csv
 import logging
+from pathlib import Path
 import tarfile
 import tempfile
-from pathlib import Path
 
 from .configuration import environment
 from .net_utilities import download_magic
