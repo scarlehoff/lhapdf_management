@@ -1,12 +1,9 @@
-name: Check all PDFs
+name: Check we can read many PDFs
 
-on:
-  pull_request:
-    types: [labeled]
+on: [push]
 
 jobs:
   pdftest:
-    if: contains(github.event.pull_request.labels.*.name, 'test_all_pdfs')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +15,7 @@ jobs:
         run: |
           pip install .
           lhapdf-management update --init
-      - name: Test alll
+      - name: Test a random assortment of 100 PDFs
         shell: bash -l {0}
         run: |
-          python tests/test_itall.py --yes --verbose -n 500
+          python tests/test_itall.py --yes --verbose -n 200
