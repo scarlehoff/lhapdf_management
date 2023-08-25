@@ -2,9 +2,12 @@
     External interface to use the interface programatically
     In this situation the environment should also be changed programatically
 """
+__version__ = 0.4
+
 from functools import partial
 
 import lhapdf_management.configuration
+from lhapdf_management.pdfsets import PDF
 from lhapdf_management.scripts.lhapdf_script import Runner
 
 
@@ -31,3 +34,8 @@ def setVerbosity(verbosity_level):
 def paths():
     """Returns the first active LHAPDF path"""
     return [environment.datapath]
+
+
+def load_pdf_meta(pdf_name):
+    """Commodity function to load the PDF infomation given a PDF name"""
+    return PDF(environment.datapath / pdf_name)

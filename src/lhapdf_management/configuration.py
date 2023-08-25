@@ -6,8 +6,8 @@
 """
 import logging
 import os
-import sys
 from pathlib import Path
+import sys
 
 logger = logging.getLogger(__name__)
 

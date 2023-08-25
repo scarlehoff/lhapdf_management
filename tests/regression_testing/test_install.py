@@ -1,11 +1,12 @@
 """
     Test the update command and compare with LHAPDF
 """
+from filecmp import dircmp
 import os
+from pathlib import Path
 import subprocess as sp
 from tempfile import mkdtemp
-from pathlib import Path
-from filecmp import dircmp
+
 import pytest
 from test_show import patterns as pdfsets
 

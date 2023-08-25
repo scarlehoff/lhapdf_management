@@ -4,8 +4,8 @@
 """
 import argparse
 import logging
-import sys
 from pathlib import Path
+import sys
 
 from lhapdf_management import management
 from lhapdf_management.configuration import environment

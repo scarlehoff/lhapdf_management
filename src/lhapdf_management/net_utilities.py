@@ -3,11 +3,11 @@
 """
 import logging
 import math
+from pathlib import Path
 import shutil
 import tempfile
 import urllib.parse
 import urllib.request
-from pathlib import Path
 
 try:
     from tqdm import tqdm

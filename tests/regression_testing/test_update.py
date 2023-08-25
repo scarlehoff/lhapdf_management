@@ -2,9 +2,9 @@
     Test the update command and compare with LHAPDF
 """
 import os
+from pathlib import Path
 import subprocess as sp
 from tempfile import mkdtemp
-from pathlib import Path
 
 
 def test_update():

@@ -2,6 +2,7 @@
     Test the show command
 """
 import subprocess as sp
+
 import pytest
 
 patterns = [
@@ -39,7 +40,6 @@ def compare(command, *args, verbose=False, sort=False):
         print("<<<<<<<<<<")
         print(new_raw)
     if len(old) != len(new):
-
         print(f"Lists of different lengths: {len(old)} vs {len(new)}")
         return False
     for i, j in zip(old, new):
