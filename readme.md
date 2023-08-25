@@ -96,5 +96,3 @@ The list of features that are currently missing with respect to the previous scr
 
 - list ``--outdated``
 - install ``--dryrun``
-
-[License](https://gitlab.com/hepcedar/lhapdf/-/blob/master/COPYING)
