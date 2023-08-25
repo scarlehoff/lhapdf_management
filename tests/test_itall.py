@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 import sys
 import tempfile
+import numpy as np
 
 from lhapdf_management import environment, pdf_list, pdf_update
 
@@ -18,6 +19,8 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--dir", help="Directory where to download the sets", type=Path)
     parser.add_argument("-y", "--yes", help="Respond yes to every question", action="store_true")
     parser.add_argument("-v", "--verbose", help="Be verbose", action="store_true")
+    parser.add_argument("-a", "--all", help = "Try really ALL sets, otherwise, do a random selection of N of them", action="store_true")
+    parser.add_argument("-n", "--npdfs", help = "If all is not given, hoy many PDFs to actually test (default 50)", type=int, default=50)
 
     args = parser.parse_args()
 
@@ -45,6 +48,12 @@ This is likely to be heavy in both your storage and your bandwith."""
 
     # And now list them all
     list_of_pdfs = pdf_list()
+
+    # if not --all, take a mask of N PDFs
+    if not args.all:
+        if args.npdfs > len(list_of_pdfs):
+            raise ValueError(f"The value of N ({args.npdfs}) cannot be greater than the number of PDFs available ({len(list_of_pdfs)}), use --all if you just want to test all of them")
+        list_of_pdfs = np.random.choice(list_of_pdfs, size=args.npdfs, replace=False)
 
     # And time to install!
     failed_pdfs = []
