@@ -26,7 +26,7 @@ environment = lhapdf_management.configuration.environment
 # Provide some LHAPDF subfunctions
 def setVerbosity(verbosity_level):
     print(
-        "Warning: you are not using LHAPDF but rather lhapdf-management, this call to setVerbosity will not have any effect"
+        f"Warning: you are not using LHAPDF but rather lhapdf-management, this call to setVerbosity({verbosity_level}) will not have any effect"
     )
     return None
 
