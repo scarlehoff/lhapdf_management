@@ -145,6 +145,10 @@ class PDF:
         return self._setinfo.id_code
 
     @property
+    def path(self):
+        return self._path
+
+    @property
     def info(self):
         """Information from the PDF .info file as a dictionary"""
         if self._info:
