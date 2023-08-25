@@ -21,4 +21,4 @@ jobs:
       - name: Test alll
         shell: bash -l {0}
         run: |
-          python tests/test_itall.py --yes --verbose -N 500
+          python tests/test_itall.py --yes --verbose -n 500
