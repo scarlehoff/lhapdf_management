@@ -33,6 +33,7 @@ class _Environment:
 
         # Create and format the log handler
         self._root_logger = logging.getLogger(__name__.split(".")[0])
+        self._root_logger.setLevel(logging.INFO)
         _console_handler = logging.StreamHandler()
         _console_format = logging.Formatter("[%(levelname)s] %(message)s")
         _console_handler.setFormatter(_console_format)
@@ -123,7 +124,9 @@ def _get_lhapdf_datapath(best_guess=False):
         logger.error(
             "Data directory for LHAPDF not found, you can use the LHAPDF_DATA_PATH environ variable"
         )
-        raise FileNotFoundError("No data directory for LHAPDF found") from e
+        raise FileNotFoundError(
+            "No LHAPDF data directory found, you can create it with `lhapdf-management update --init`"
+        )
 
 
 environment = _Environment()
