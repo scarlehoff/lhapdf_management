@@ -1,8 +1,9 @@
 Management library for LHAPDF
+-----------------------------
 
-This a pure-python LHAPDF management library to download, list and load PDFs.
-At the moment it cannot do any interpolation or perform anything that would need a complete LHAPDF installation.
-
+This is a pure-python (unofficial) LHAPDF management library ans scripts to download, list and load PDFs using the LHAPDF format.
+It include a number of utilities to inspect the PDF metadata and the grids, but it is not meant to be a substitute of the LHAPDF library, only of the `lhapdf` script.
+For more information about LHAPDF please see the [official repository](https://gitlab.com/hepcedar/lhapdf) and [webpage](https://www.lhapdf.org) for LHAPDF and to see their citation policy.
 
 # Install
 
@@ -14,14 +15,15 @@ It can be installed from pypi with a simple command
 
 # Features
 
-At the moment is very bare-bones and includes only:
+This library offers a script which aims to be a drop-in replacement of the `lhapdf` python script (not the library!)
+In order not to clash with an existing installation of LHAPDF, the script name is `lhapdf-management`.
 
 ## Update
 
 Updates the local reference index
 
 ```
-  lhapdf_management update
+  lhapdf-management update
 ```
 
 If no installation of LHAPDF is found, the program will fail to do anything, as creating the `LHAPDF` directory is not the business of the management module.
@@ -31,14 +33,14 @@ In order to run lhapdf-management and make it believe that LHAPDF already exist 
 LHAPDF_DATA_PATH=$(python -c 'from pathlib import Path ; from sys import prefix ; print(Path(prefix) / "share" / "LHAPDF")' ; lhapdf-management update
 ```
 
-It is possible to create the directory in the "best guess location" doing `lhapdf_management update --init`
+It is also possible to create the directory in the "best guess location" by doing `lhapdf_management update --init`
 
 ## List
 
 Lists all available PDFs
 
 ```
-  lhapdf_management list [PATTERNS ...] [--installed] [--codes]
+  lhapdf-management list [PATTERNS ...] [--installed] [--codes]
 ```
 
 ## Install
@@ -46,7 +48,7 @@ Lists all available PDFs
 Installs a given PDF
 
 ```
-  lhapdf_management install <pdf_name> [--upgrade] [--keep]
+  lhapdf-management install <pdf_name> [--upgrade] [--keep]
 ```
 
 ## Open a PDF
@@ -84,15 +86,21 @@ For instance, in order to download all PDFs matching a certain pattern one can w
 following short bash script:
 
 ```bash
-  for pdf in $(lhapdf_management list NNPDF31*)
+  for pdf in $(lhapdf-management list NNPDF31*)
   do
-    lhapdf_management install ${pdf} --upgrade
+    lhapdf-management install ${pdf} --upgrade
   done
 ```
 
-# TODO
-While this script can (if needed) be used as is, there are a number of features missing to be compatible with the `lhapdf`.
-The list of features that are currently missing with respect to the previous script are:
+## TODO
+
+Not all features of the upstream `lhapdf` script are currently implemented, currently missing:
 
 - list ``--outdated``
 - install ``--dryrun``
+
+## Related projects
+
+- A similar project providing rust bindings to LHAPDF is https://github.com/cschwan/managed-lhapdf
+- The PDFFlow library https://github.com/N3PDF/pdfflow is a drop-in replacement of the (interpolation) capabilities of LHAPDF using TensorFlow to offer hardware acceleration. It uses `lhapdf-management` to donwload the PDF files.
+ 
