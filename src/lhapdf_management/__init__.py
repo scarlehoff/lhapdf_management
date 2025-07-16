@@ -1,8 +1,9 @@
-"""    
-    External interface to use the interface programatically
-    In this situation the environment should also be changed programatically
 """
-__version__ = 0.5
+External interface to use the interface programatically
+In this situation the environment should also be changed programatically
+"""
+
+__version__ = 0.6
 
 from functools import partial
 

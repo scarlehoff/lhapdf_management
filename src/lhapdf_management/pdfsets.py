@@ -1,16 +1,17 @@
 """
-    PDF classes holding information about PDFs
+PDF classes holding information about PDFs
 
-    Example
-    -------
+Example
+-------
 
-    >>> from lhapdf_management.pdfsets import PDF
-    >>> from lhapdf_management import environment
-    >>> data_path = environment.datapath
-    >>> pdf = PDF(data_path / "NNPDF31_nnlo_as_0118")
-    >>> grids = pdf.get_member_grids(0)
+>>> from lhapdf_management.pdfsets import PDF
+>>> from lhapdf_management import environment
+>>> data_path = environment.datapath
+>>> pdf = PDF(data_path / "NNPDF31_nnlo_as_0118")
+>>> grids = pdf.get_member_grids(0)
 
 """
+
 from dataclasses import dataclass
 from fnmatch import fnmatch
 from pathlib import Path

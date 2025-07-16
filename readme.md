@@ -7,7 +7,7 @@ For more information about LHAPDF please see the [official repository](https://g
 
 # Install
 
-It can be installed from pypi with a simple command
+It can be installed from PyPI with a simple command
 
 ```
   pip install lhapdf-management
@@ -92,15 +92,9 @@ following short bash script:
   done
 ```
 
-## TODO
-
-Not all features of the upstream `lhapdf` script are currently implemented, currently missing:
-
-- list ``--outdated``
-- install ``--dryrun``
-
 ## Related projects
 
 - A similar project providing rust bindings to LHAPDF is https://github.com/cschwan/managed-lhapdf
-- The PDFFlow library https://github.com/N3PDF/pdfflow is a drop-in replacement of the (interpolation) capabilities of LHAPDF using TensorFlow to offer hardware acceleration. It uses `lhapdf-management` to donwload the PDF files.
+- The PDFFlow library https://github.com/N3PDF/pdfflow is a drop-in replacement of the (interpolation) capabilities of LHAPDF using TensorFlow to offer hardware acceleration. It uses `lhapdf-management` to download the PDF files.
+- The NeoPDF library https://github.com/Radonirinaunimi/neopdf provides a drop-in replacement for LHAPDF grid interpolation with extra features for polarized or nuclear PDFs.
  

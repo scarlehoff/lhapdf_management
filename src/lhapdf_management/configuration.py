@@ -1,9 +1,10 @@
 """
-    LHAPDF configuration environment
+LHAPDF configuration environment
 
-    It exposes an object (environment) that should contain
-    all relevant external information
+It exposes an object (environment) that should contain
+all relevant external information
 """
+
 import logging
 import os
 from pathlib import Path
@@ -16,6 +17,23 @@ logger = logging.getLogger(__name__)
 INDEX_FILENAME = "pdfsets.index"
 CVMFSBASE = "/cvmfs/sft.cern.ch/lcg/external/lhapdfsets/current/"
 URLBASE = r"http://lhapdfsets.web.cern.ch/lhapdfsets/current/"
+
+# Default configuration if lhapdf.conf needs to be populated
+DEFAULT_CONF = {
+    "Verbosity": 1,
+    "Interpolator": "logcubic",
+    "Extrapolator": "continuation",
+    "ForcePositive": 0,
+    "AlphaS_Type": "analytic",
+    "MZ": 91.1876,
+    "MUp": 0.002,
+    "MDown": 0.005,
+    "MStrange": 0.10,
+    "MCharm": 1.29,
+    "MBottom": 4.19,
+    "MTop": 172.9,
+    "Pythia6LambdaV5Compat": True,
+}
 
 
 class _Environment:

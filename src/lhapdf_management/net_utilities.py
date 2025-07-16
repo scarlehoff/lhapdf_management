@@ -1,6 +1,7 @@
 """
-    Network utilities of LHAPDF
+Network utilities of LHAPDF
 """
+
 import logging
 import math
 from pathlib import Path
