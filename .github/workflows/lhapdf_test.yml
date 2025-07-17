@@ -22,10 +22,9 @@ jobs:
         shell: bash -l {0}
         run: |
           conda install -y lhapdf
-          python -m pip install .
-          python -m pip install pytest
+          python -m pip install .[tests]
       - name: Test with pytest against lhapdf
         shell: bash -l {0}
         run: |
           lhapdf-management update --init
-          pytest tests/regression_testing
+          pytest tests/lhapdf_testing

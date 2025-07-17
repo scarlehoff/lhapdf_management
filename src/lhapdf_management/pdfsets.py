@@ -48,8 +48,11 @@ class SetInfo:
         from lhapdf_management import environment
 
         # Import here to avoid circular imports
-        pdf_path = environment.datapath / self.name
-        return PDF(pdf_path, setinfo_object=self)
+        for possible_path in environment.paths:
+            pdf_path = possible_path / self.name
+            if pdf_path.is_dir():
+                return PDF(pdf_path, setinfo_object=self)
+        raise FileNotFoundError("Could not find {self.name} in the system.")
 
     def install(self):
         """Download and install the corresponding PDF"""

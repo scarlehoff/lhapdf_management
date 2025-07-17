@@ -131,12 +131,9 @@ def download_magic(target_name, destination, dry=False):
 
         try:
             url = source + target_name
-            if dry:
-                b_size = _get_remote_size(url)
-                print(f"{target_name} [{_byte_print(b_size)}]")
-                # logger.info("%s [%s]", target_name, _byte_print(b_size))
-                return True
-
+            b_size = _get_remote_size(url)
+            print(f"{target_name} [{_byte_print(b_size)}]")
+            logger.info("%s [%s]", target_name, _byte_print(b_size))
             _download_url(url, dest_path)
             return True
         except urllib.request.URLError as e:

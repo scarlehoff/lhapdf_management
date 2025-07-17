@@ -6,7 +6,6 @@ import csv
 import logging
 from pathlib import Path
 import tarfile
-import tempfile
 
 from .configuration import environment
 from .net_utilities import download_magic
@@ -53,12 +52,17 @@ def get_reference_list(filepath=None):
 
 def get_installed_list():
     """Returns a list of SetInfo objects representing installed PDF sets."""
-    lhapdf_data_folder = environment.datapath
-    reference_pdf_list = get_reference_list(lhapdf_data_folder / environment.index_filename)
+    # First read the index
+    index_path = environment.listdir / environment.index_filename
+    reference_pdf_list = get_reference_list(index_path)
     reference_pdfs = {s.name: s for s in reference_pdf_list}
-    # Walk down the list of .info files and get only the ones installed
-    pdf_iterator = lhapdf_data_folder.glob("*/*.info")
-    return [reference_pdfs[pdf.stem] for pdf in pdf_iterator if pdf.stem in reference_pdfs]
+    # Now get all PDFs in all possible folders for which we have an .info file
+    all_pdfs = []
+    for data_path in environment.paths:
+        all_pdfs += [i.stem for i in data_path.glob("*/*.info")]
+    all_pdfs = set(all_pdfs)
+    # Return the SetInfo objects for the installed PDFs that are in the index
+    return [reference_pdfs[pdfname] for pdfname in all_pdfs if pdfname in reference_pdfs]
 
 
 #####
@@ -72,24 +76,30 @@ def update_reference_file():
     return False
 
 
-def install_pdf(name, dry=False, upgrade=False, keep=False):
+def install_pdf(name, dry=False, upgrade=False, keep=False, target_path=None):
     """Install the named pdf
     Don't install if the PDF already exists (unless upgrade=True)
     If keep is true, do not remove the tarball.
-    If dry is true, skip the download (and extract) step
+    If dry is true, skip the download (and extract) step.
+    The target path for the PDF installation can be explicitly declared, if None
+    it will default to ``environment.datapath``.
     """
+    if target_path is None:
+        target_path = environment.datapath
+
     if not upgrade:
-        final_folder = environment.datapath / name
+        final_folder = target_path / name
         if final_folder.exists():
             logger.error("The PDF %s already exists at %s", name, environment.datapath)
             return False
 
+    # While I would prefer to download to a temporary folder, LHAPDF downloads directly
+    # to the target folder, and we want to reproduce LHAPDF's behaviour
     tarname = f"{name}.tar.gz"
-    tmp_folder = Path(tempfile.mkdtemp())
-    if download_magic(tarname, tmp_folder, dry=dry):
+    if download_magic(tarname, target_path, dry=dry):
         if dry:
             return True
-        extract_tarball(tmp_folder / tarname, environment.datapath, keep_tarball=keep)
+        extract_tarball(target_path / tarname, target_path, keep_tarball=keep)
         return True
     logger.error("Unable to download the %s PDF", name)
     return False

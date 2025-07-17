@@ -26,7 +26,7 @@ dynamic =["version"]
 
 [project.optional-dependencies]
 fancy = ["tqdm"]
-tests = ["pytest"]
+tests = ["pytest", "pytest-order"]
 
 [project.scripts]
 lhapdf-management = "lhapdf_management.scripts.lhapdf_script:main"

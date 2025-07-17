@@ -81,7 +81,7 @@ class Runner:
         )
 
         main_parser.add_argument(
-            "--pdfdir", type=Path, help="Local path where the PDF sets are located"
+            "--pdfdir", type=Path, help="Main local path where the PDF sets are located"
         )
         main_parser.add_argument(
             "--listdir", type=Path, help="Local path where the PDF index is located"
@@ -143,7 +143,7 @@ class Runner:
 
         for pdf in index_db:
             if args.codes:
-                print(f"{pdf.id_code} {pdf.name}")
+                print(f"{pdf.id_code}  {pdf.name}")
             else:
                 print(pdf.name)
 
