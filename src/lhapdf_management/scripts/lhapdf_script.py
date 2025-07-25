@@ -1,14 +1,30 @@
 #!/usr/bin/env python3
 """
-    Main LHAPDF management script
+LHAPDF management script.
+
+The syntax of this script follows closely that of LHAPDF so that it can be used
+as a drop-in replacement.
+
+It accepts the following commands:
+
+    install: download and install PDF sets
+    list: list available (or installed) PDF sets
+    show: show some information about a given PDF set
+    update: update the PDF index
+
+e.g.,
+    lhapdf-management install NNPDF40MC_nnlo_as_01180
+    lhapdf-management update --init
 """
 import argparse
 import logging
 from pathlib import Path
 import sys
 
+import yaml
+
 from lhapdf_management import management
-from lhapdf_management.configuration import environment
+from lhapdf_management.configuration import DEFAULT_CONF, environment
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +34,13 @@ def _filter_by_pattern(input_list, pattern):
     if pattern:
         input_list = filter(lambda x: any(x.match(k) for k in pattern), input_list)
     return input_list
+
+
+def _init_config_file(lhadir_path):
+    """Create the lhapdf.conf config file if it doesn't exist."""
+    config_path = lhadir_path / "lhapdf.conf"
+    if not config_path.exists():
+        yaml.dump(DEFAULT_CONF, config_path.open("w", encoding="UTF-8"))
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -34,8 +57,8 @@ class Runner:
     """
 
     def __init__(self, interactive=False):
-        # Accepted modes
-        modes = [i for i in dir(self) if not i.startswith("_")]
+        # Accepted commands
+        commands = [i for i in dir(self) if not i.startswith("_")]
 
         # Create aliases
         self.ls = self.list
@@ -45,16 +68,20 @@ class Runner:
         self._interactive = interactive
 
         if interactive:
-            # In interactive mode no global option is parsed
+            # In interactive command no global option is parsed
             # (if the environment needs to be changed it should be done manually)
             self._parser = ArgumentParser(add_help=False)
             return
 
         # Initiate the parsers
-        main_parser = ArgumentParser(description=__doc__, add_help=False)
+        main_parser = ArgumentParser(
+            description=__doc__,
+            add_help=False,
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
 
         main_parser.add_argument(
-            "--pdfdir", type=Path, help="Local path where the PDF sets are located"
+            "--pdfdir", type=Path, help="Main local path where the PDF sets are located"
         )
         main_parser.add_argument(
             "--listdir", type=Path, help="Local path where the PDF index is located"
@@ -64,9 +91,9 @@ class Runner:
         )
         main_parser.add_argument("--verbose", action="store_true", help="Increase verbosity level")
 
-        # First ask for the mode (and other global variables)
+        # First ask for the command (and other global variables)
         self._parser = ArgumentParser(parents=[main_parser])
-        main_parser.add_argument("mode", help=f"One of {modes}", type=str)
+        main_parser.add_argument("command", help=f"One of {commands}", type=str)
 
         main_args, remaining_args = main_parser.parse_known_args()
 
@@ -79,19 +106,19 @@ class Runner:
         for new_source in main_args.sources:
             environment.add_source(new_source)
 
-        # Select mode (and add it to the program name which is useful for the error
+        # Select command (and add it to the program name which is useful for the error
         # and I hope it doesn't break anything in the way
-        prog_mode = main_args.mode
-        self._parser.prog += f" {prog_mode}"
+        prog_command = main_args.command
+        self._parser.prog += f" {prog_command}"
 
         try:
-            getattr(self, prog_mode)(*remaining_args)
+            getattr(self, prog_command)(*remaining_args)
         except AttributeError:
-            main_parser.error(f"Unknown mode '{prog_mode}' ({' '.join(remaining_args)})")
+            main_parser.error(f"Unknown command '{prog_command}' ({' '.join(remaining_args)})")
 
     def list(self, *extra_args):
         """List available PDF sets, optionally filtered and/or categorised by status"""
-        list_args = self._parser.add_argument_group("list arguments")
+        list_args = self._parser.add_argument_group("list arguments", description=self.list.__doc__)
         list_args.add_argument("PATTERNS", nargs="*", help="Patterns to match PDF set against")
         list_args.add_argument("--installed", help="Show only installed sets", action="store_true")
         list_args.add_argument(
@@ -116,13 +143,13 @@ class Runner:
 
         for pdf in index_db:
             if args.codes:
-                print(f"{pdf.id_code} {pdf.name}")
+                print(f"{pdf.id_code}  {pdf.name}")
             else:
                 print(pdf.name)
 
     def show(self, *extra_args):
         """Show information about installed PDFs"""
-        show_args = self._parser.add_argument_group("show arguments")
+        show_args = self._parser.add_argument_group("show arguments", description=self.show.__doc__)
         show_args.add_argument("PATTERNS", nargs="*", help="Patterns to match PDF set against")
         args = self._parser.parse_args(extra_args)
 
@@ -144,7 +171,9 @@ Error type: {pdf.error_type}"""
 
     def update(self, *extra_args):
         """Download and install a new PDF set index file"""
-        update_args = self._parser.add_argument_group("update arguments")
+        update_args = self._parser.add_argument_group(
+            "update arguments", description=self.update.__doc__
+        )
         datapath = environment.possible_datapath
         update_args.add_argument(
             "--init",
@@ -153,13 +182,17 @@ Error type: {pdf.error_type}"""
         )
         args = self._parser.parse_args(extra_args)
         if args.init:
-            logger.warning("Creating the path")
+            logger.warning(f"Creating the LHAPDF data path at: {datapath}")
             datapath.mkdir(exist_ok=True, parents=True)
+            _init_config_file(datapath)
+
         return management.update_reference_file()
 
     def install(self, *extra_args):
         """Download and install new PDF set data files"""
-        install_args = self._parser.add_argument_group("install arguments")
+        install_args = self._parser.add_argument_group(
+            "install arguments", description=self.install.__doc__
+        )
         install_args.add_argument(
             "pdf_name", help="PDF to download, accept pattern-like arguments", nargs="+"
         )

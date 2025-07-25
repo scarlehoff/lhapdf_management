@@ -1,8 +1,9 @@
-"""    
-    External interface to use the interface programatically
-    In this situation the environment should also be changed programatically
 """
-__version__ = 0.5
+External interface to use the interface programatically
+In this situation the environment should also be changed programatically
+"""
+
+__version__ = 0.6
 
 from functools import partial
 
@@ -32,10 +33,20 @@ def setVerbosity(verbosity_level):
 
 
 def paths():
-    """Returns the first active LHAPDF path"""
-    return [environment.datapath]
+    """Returns a list of all active paths"""
+    return list(environment.paths)
 
 
 def load_pdf_meta(pdf_name):
     """Commodity function to load the PDF infomation given a PDF name"""
     return PDF(environment.datapath / pdf_name)
+
+
+def pathsPrepend(new_path):
+    """Preprend to the list of sources (higher priority)."""
+    environment.add_path(new_path)
+
+
+def pathsAppend(new_path):
+    """Append to the list of sources (lower priority)."""
+    environment.add_path(new_path, priority=False)
